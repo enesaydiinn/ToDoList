@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="row">
+    <div class="col-5 mx-auto">
+      <h3 class="bg-primary text white p-3 ">
+        {{ getName() }}' ToDo List
+      </h3>
+
+
+      <div class="input-group mb-3">
+        <input #txtItem type="text" class="form-control"
+        [(ngModel)]="inputText"
+        (keyup.enter)="addItem(txtItem.value);txtItem.value=''"
+        >
+        <button
+        [class]="{
+          'disabled':txtItem.value.length==0,
+          'btn-secondary':txtItem.value.length==0,
+          'btn-primary':txtItem.value.length>0
+        }"
+        class="btn"
+        (click)="addItem(txtItem.value);txtItem.value=''">Add</button>
+      </div>
+
+
+      <div class="form-check mb-3">
+        <input type="checkbox" [(ngModel)]="displayAll" class="form-check-input" id="displayAll">
+        <label for="displayAll" class="form-check-label">All View</label>
+      </div>
+
+      <div class="my-2">
+        {{displayCount()}} Plan has been made!
+      </div>
+
+
+      <ng-template #itemsTable>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+            <tbody>
+              <tr *ngFor="let item of getItems(); let i=index" [class]="{'bg-warning':item.action, 'bg-primary':!item.action }">
+                <td>{{i+1}}</td>
+                <td>{{item.description}}</td>
+
+                <!-- if bloğu -->
+                <!-- <td>
+                  <div *ngIf="item.action">Yes</div>
+                  <div *ngIf="!item.action">No</div>
+                </td> -->
+                <td>
+                  <div [ngSwitch]="item.action">
+                    <div *ngSwitchCase="true">Yes</div>
+                    <div *ngSwitchDefault>No</div>
+                  </div>
+                </td>
+
+                <!-- if-else bloğu -->
+                <!-- <div *ngIf="item.action;else noTemplate">
+                  Yes
+                </div>
+                <ng-template #noTemplate>
+                    No
+                </ng-template> -->
+
+                <!-- if-then bloğu -->
+                <!-- <div *ngIf="item.action;then noTemplate">
+                  Burası gösterilmez
+                </div>
+                <ng-template #noTemplate>
+                    No
+                </ng-template> -->
+
+                <!-- if-then-else bloğu -->
+                <!-- <div *ngIf="item.action;then yesTemplate else noTemplate">
+                  Burası gösterilmez
+                </div>
+                <ng-template #noTemplate>
+                    No
+                </ng-template>
+                <ng-template #yesTemplate>
+                  Yes
+              </ng-template> -->
+                <td>
+                  <input type="checkbox" (change)="onActionChanged(item)" [(ngModel)]="item.action">
+                </td>
+              </tr>
+
+            </tbody>
+        </table>
+      </ng-template>
+
+      <div class="alert alert-warning" *ngIf="getItems().length==0 else itemsTable">
+        Congratulations! You did all plans :)
+      </div>
+
+
+
+
+
+    </div>
+  </div>
+</div>
+
